@@ -1,0 +1,133 @@
+<div id="answerSide">
+  <div id="vol_and_page">{{volume}} {{page}}</div>
+  <div id="concept">{{grammatical concept}}</div>
+  <!-- We fill this in with JavaScript -->
+  <div id="questionBox"></div>
+  <div id="answerBox">
+    <!-- Anchor to this on card flip -->
+    <div id="answer"></div>
+    <div id="usage">{{usage}}<p id="equiv">{{equivalent}}</p></div>
+    {{#expression_jp}}
+    <div class="example" id="expression">
+      <div class="example_jp">{{expression_jp}}</div>
+      <div class="example_en">{{expression_en}}</div>
+    </div>
+    {{/expression_jp}} {{#example 1_jp}}
+    <div class="example">
+      <div class="example_jp">{{example 1_jp}}</div>
+      <div class="example_en">{{example 1_en}}</div>
+    </div>
+    {{/example 1_jp}} {{#example 2_jp}}
+    <div class="example">
+      <div class="example_jp">{{example 2_jp}}</div>
+      <div class="example_en">{{example 2_en}}</div>
+    </div>
+    {{/example 2_jp}} {{#example 3_jp}}
+    <div class="example">
+      <div class="example_jp">{{example 3_jp}}</div>
+      <div class="example_en">{{example 3_en}}</div>
+    </div>
+    {{/example 3_jp}} {{#example 4_jp}}
+    <div class="example">
+      <div class="example_jp">{{example 4_jp}}</div>
+      <div class="example_en">{{example 4_en}}</div>
+    </div>
+    {{/example 4_jp}} {{#example 5_jp}}
+    <div class="example">
+      <div class="example_jp">{{example 5_jp}}</div>
+      <div class="example_en">{{example 5_en}}</div>
+    </div>
+    {{/example 5_jp}} {{#example 6_jp}}
+    <div class="example">
+      <div class="example_jp">{{example 6_jp}}</div>
+      <div class="example_en">{{example 6_en}}</div>
+    </div>
+    {{/example 6_jp}} {{#example 7_jp}}
+    <div class="example">
+      <div class="example_jp">{{example 7_jp}}</div>
+      <div class="example_en">{{example 7_en}}</div>
+    </div>
+    {{/example 7_jp}} {{#example 8_jp}}
+    <div class="example">
+      <div class="example_jp">{{example 8_jp}}</div>
+      <div class="example_en">{{example 8_en}}</div>
+    </div>
+    {{/example 8_jp}} {{#example 9_jp}}
+    <div class="example">
+      <div class="example_jp">{{example 9_jp}}</div>
+      <div class="example_en">{{example 9_en}}</div>
+    </div>
+    {{/example 9_jp}} {{#example 10_jp}}
+    <div class="example">
+      <div class="example_jp">{{example 10_jp}}</div>
+      <div class="example_en">{{example 10_en}}</div>
+    </div>
+    {{/example 10_jp}} {{#example 11_jp}}
+    <div class="example">
+      <div class="example_jp">{{example 11_jp}}</div>
+      <div class="example_en">{{example 11_en}}</div>
+    </div>
+    {{/example 11_jp}} {{#example 12_jp}}
+    <div class="example">
+      <div class="example_jp">{{example 12_jp}}</div>
+      <div class="example_en">{{example 12_en}}</div>
+    </div>
+    {{/example 12_jp}} {{#example 13_jp}}
+    <div class="example">
+      <div class="example_jp">{{example 13_jp}}</div>
+      <div class="example_en">{{example 13_en}}</div>
+    </div>
+    {{/example 13_jp}} {{#example 14_jp}}
+    <div class="example">
+      <div class="example_jp">{{example 14_jp}}</div>
+      <div class="example_en">{{example 14_en}}</div>
+    </div>
+    {{/example 14_jp}} {{#example 15_jp}}
+    <div class="example">
+      <div class="example_jp">{{example 15_jp}}</div>
+      <div class="example_en">{{example 15_en}}</div>
+    </div>
+    {{/example 15_jp}}
+
+    <script>
+      // Make a mutable array of fields
+      var nodes = document.getElementsByClassName("example");
+      var count = Math.floor(1 + (fields.length / 4));
+      
+      // setup for random day/card dependent random indices
+      var oneDayInMs = 1000 * 60 * 60 * 24;
+      var currentTimeInMs = new Date().getTime();
+      var timeInDays = Math.floor(currentTimeInMs / oneDayInMs);
+      var numberForToday = timeInDays % 9999;
+      var seed = 1000*(numberForToday + {{page}});
+      function random() {
+        seed = ((1103515245*seed+12345)%2147483648);
+        return seed/2147483648;
+      }
+
+      // generate random ordered nonrepeating indices - 'count' of them      
+			 var results = [];
+
+			 function generateUniqueSamples(x, y) {
+			     let samples = [];
+  			   while (samples.length < x) {
+ 			        let sample = Math.floor(random() * (y + 1));
+ 			        if (!samples.includes(sample)) {
+ 			            samples.push(sample);
+ 			        }
+ 			    }
+ 			    return samples;
+      }
+      var results = generateUniqueSamples(count, fields.length+count);
+
+       for (var j = 0; j < results.length; j++) {
+           var element = results[j];
+           // Access the results[j]-th child of the 'fields' element and change its background color to blue
+           var fieldChild = nodes[element];
+           fieldChild.style.backgroundColor = '#FFFFD0';
+       }
+       
+    </script>
+  </div>
+  </div>
+</div>
