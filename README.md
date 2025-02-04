@@ -43,7 +43,7 @@ As with everything relating to using anki for language: it's very useful so long
 
 Consider looking through the [online index](https://dojgdeck.neocities.org/#anon) of the DoJG for any sticking points.
 
-## Similar decks
+### Similar decks
 
 I should note that this is not the first DoJG deck using audio - [this](https://ankiweb.net/shared/info/843402109) already exists. It's not really what I'm looking for, since the cards are sentence-based rather than word-based, but it's not a bad option of you prefer that - the same author has a [cut-down version of the same deck](https://ankiweb.net/shared/info/1705551744) which features furigana in brackets.
 
