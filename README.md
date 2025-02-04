@@ -43,6 +43,12 @@ As with everything relating to using anki for language: it's very useful so long
 
 Consider looking through the [online index](https://dojgdeck.neocities.org/#anon) of the DoJG for any sticking points.
 
+## Similar decks
+
+I should note that this is not the first DoJG deck using audio - [this](https://ankiweb.net/shared/info/843402109) already exists. It's not really what I'm looking for, since the cards are sentence-based rather than word-based, but it's not a bad option of you prefer that - the same author has a [cut-down version of the same deck](https://ankiweb.net/shared/info/1705551744) which features furigana in brackets.
+
+I ¿think? both of these decks are meant to work with AwesomeTTS - I haven't used because I want to minimize setup cost and I think Voicepeak produces better quality audio, but it's also worth considering if you're antsy about having to download all the audio upfront (to my knowledge AwesomeTTS generates everything on the fly and keeps recent sentences in a cache).
+
 ### On random example sentences
 
 This is based off of the anon random version of the [DoJG deck](https://dojgdeck.neocities.org/#anon) in neocities. This is just the standard DoJG deck with the card html edited such that the front side shows a random subset of the example sentences on the back, this subset changing for each card each day. Generally speaking example sentences are a great addition to any sort of language deck *as long as* they aren't regular enough that you'll recognize the sentences instead of the word/concept - this is specifically avoided by having the front only show a random subset of the back. Your mileage may vary on whether you end up recognizing the sentences anyway (there's only about 5-10 per example), though personally I don't end up recognizing them very often.
