@@ -4,17 +4,11 @@ The anki deck for the Dictionary of Japanese Grammar, but with furigana and audi
 
 ### Decks
 
-The decks can be found in the [finished_decks](https://github.com/XaviACLM/dojg-furigana/tree/master/finished_decks) directory. +F means the deck has furigana and +A means the deck has audio - pick and choose. The option without either is there for completeness, but it does have some minor differences with vanilla DoJG, explained in §Differences. To install this you simply have to download whichever .apkg file you like and drag it into anki. If you already use a dojg deck, consider using [this other repository](https://github.com/XaviACLM/anki-sched-transfer) to transfer scheduling data between cards.
+The decks can be downloaded from [here](https://www.mediafire.com/folder/8mkkfjqgrjofc/finished_decks). +F means the deck has furigana and +A means the deck has audio - pick and choose. The option without either is there for completeness, but it does have some minor differences with vanilla DoJG, explained in §Implementation.Changes to the original deck. To install this you simply have to download whichever .apkg file you like and drag it into anki. If you already use a dojg deck, consider using [this other repository](https://github.com/XaviACLM/anki-sched-transfer) to transfer scheduling data between cards.
 
 ### Media
 
-**The media (.wav files) have to be downloaded separately.** The download is available [here](https://www.mediafire.com/file/ikjff2s3u2wn051/dojg_sentence_audio.7z/file). This is only neccessary if you use one of the +A decks.
-
-You will need to manually insert the media into Anki's files. In windows, this is easy - go to `%appdata%/Anki2/your-anki-username/collection.media`, create in this folder another folder called `dojg_sentence_audio`, and paste within it all the .wav files you have downloaded. For other operating systems you'll have to figure out where Anki keeps its `collections.media` folder, but this should be easy enough.
-
-The media isn't packed into the .apkg files because i couldn't get it working, but also because there is over 2GB of audio. For this reason the downloads are zipped, but more importantly, partial downloads are offered [here](https://www.mediafire.com/folder/nsrnc8yanphn0/DoJG_sentence_audio_zips) - corresponding to the 'Basic' and 'Intermediate' parts of the dictionary. These are used just the same as the full audio folder, just dump every .wav file into `collections.media/dojg_sentence_audio` - you can mix and match if you want (i.e. put the 'Basic' and 'Intermediate' parts but not advanced). This won't break any of the cards, you'll just find that the play buttons do nothing if you haven't downloaded the corresponding audio.
-
-Keep in mind that the amount of grammatical concepts in each part of the dictionary is similar, but because the simpler parts tend to use simpler differences, the download for the basic part is quite a lot lighter than the intermediate, and likewise intermediate is lighter than advanced.
+All the audio is at 64kbps. I can't tell the difference myself, but if you want 256kbps audio you can download it from [here](https://www.mediafire.com/file/a8rxdlmro6ivze8/dojg_sentence_audio_hq.7z/file) - this weighs a bit over a GB. You can install this by copying all the .mp3 files within to `%appdata%/Anki2/<your-anki-username>/collection.media`. If you export the decks after doing this, the high quality audio will be packaged into the .apkg.
 
 ### Clozes
 
@@ -35,7 +29,7 @@ Not everything in the deck has furigana. The two exceptions are:
 
 ### On autoplay
 
-The back of the card will autoplay the audio of all the sentences in order. The front of the card will only play one. The reason for this is in §HTML.
+The back of the card will autoplay the audio of all the sentences in order. The front of the card will only play one. The reason for this is in §Implementation.HTML.
 
 ### Is a grammar deck even a sound concept?
 
