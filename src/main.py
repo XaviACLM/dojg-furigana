@@ -11,7 +11,7 @@ import os
 from datetime import datetime
 from random import randint
 
-from deck_wrangling import DeckWrangler
+from deck_wrangling import ApkgAsAnki
 from tts import TTSManager, VoicevoxManager
 from special_punctuation_handling import handle_nakaguro, handle_brackets
 
@@ -241,18 +241,19 @@ class FieldProcessor:
 
         return final_html
 
-    def furiganize_fields(self, fields):
+    def furiganize_fields(self, note):
         # this doesn't entirely fit with the name of the function but does agree with the spirit of it
         # necessary preprocessing that either fixes mistakes in the text or at least doesn't change the meaning
         # necessary for the morphological parser to be able to handle the text
-        for original, substitute in substitutions.items():
-            fields = fields.replace(original, substitute)
 
-        fields = fields.split("\x1f")
+        fields = note.fields
+        
+        for original, substitute in substitutions.items():
+            for i,field in enumerate(fields):
+                fields[i] = field.replace(original, substitute)
 
         if "male" in fields[1] and "suffix" not in fields[1]:
             self.gender = "female" if "female" in fields[1] else "male"
-            print(self.gender)
         else:
             self.gender = None
 
@@ -275,9 +276,6 @@ class FieldProcessor:
         # add furigana to empty cloze field
         fields[8] = empty_clozes(fields[9])
 
-        fields = "\x1f".join(fields)
-        return fields
-
 
 """
 from MeCab import Tagger
@@ -289,24 +287,14 @@ print(jjsj)
 #hiragana gets parsed correctly (hell yeah)
 """
 
-with DeckWrangler(
-    "Dictionary of Japanese Grammar Blueprint", proceed_if_unzipped=True
-) as dojg_deck:
+with ApkgAsAnki("Dictionary of Japanese Grammar Blueprint", proceed_if_unzipped=True) as dojg_deck:
     tts_manager = VoicevoxManager()
     processor = FieldProcessor(
-        tts_manager, n_cards=5383, add_furigana=False, add_audio=True
+        tts_manager, n_cards=5383, add_furigana=True, add_audio=True
     )
 
-    dojg_deck.notes["flds"] = dojg_deck.notes["flds"].apply(processor.furiganize_fields)
+    dojg_deck.notes["flds"] = dojg_deck.apply_to_notes(processor.furiganize_fields)
     print(processor.counter)
 
     # dojg_deck.add_media([os.path.join('dojg_sentence_audio',file) for file in os.listdir('dojg_sentence_audio')])
-    # dojg_deck.commit(with_name="Dictionary of Japanese Grammar")
-
-
-# TODO
-# recuperate what we can from the fucked up hashes
-# try to handle the dots (da/desu)
-# figure out what's going on with the audios - one of the woman speakers seems to misspeak frequently
-
-# do 1 first and use that to lead into 2. good good
+    # dojg_deck.commit_and_save(with_name="Dictionary of Japanese Grammar")
