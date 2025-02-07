@@ -1,17 +1,4 @@
-<div id="answerSide">
-  <div id="vol_and_page">{{volume}} {{page}}</div>
-  <div id="concept">{{grammatical concept}}</div>
-  <!-- We fill this in with JavaScript -->
-  <div id="questionBox"></div>
-  <div id="answerBox">
-    <!-- Anchor to this on card flip -->
-    <div id="answer"></div>
-    <div id="usage">{{usage}}<p id="equiv">{{equivalent}}</p></div>
-    {{#expression_jp}}
-    <div class="example" id="expression">
-      <div class="example_jp">{{expression_jp}}</div>
-      <div class="example_en">{{expression_en}}</div>
-    </div><div id="questionSide">
+<div id="questionSide">
   <div id="vol_and_page">{{volume}} {{page}}</div>
   <div id="concept">{{grammatical concept}}</div>
   <!-- We fill this in with JavaScript -->
@@ -134,7 +121,7 @@
  			    }
  			    return samples;
       }
-      var results = generateUniqueSamples(count, fields.length);
+      var results = generateUniqueSamples(count, nodes.length-1);
       results.sort((a, b) => a - b); // Sort the array in ascending order
 
 

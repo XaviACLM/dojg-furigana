@@ -231,7 +231,7 @@ class FieldProcessor:
                     f"{self.counter} / {self.n_cards} - ETA {approx_ending_time.strftime('%H:%M')}"
                 )
 
-        audio_html = f"[sound:{sentence_audio_path}]"
+        audio_html = f"[sound:{sentence_filename}]"
 
         # add tag back + audio
         final_html = (
@@ -305,54 +305,34 @@ with ApkgAsAnki(
 """
 
 tts_manager = VoicevoxManager()
-with ApkgAsAnki(
-    "Dictionary of Japanese Grammar Blueprint", proceed_if_unzipped=True
-) as dojg_deck:
-    processor = FieldProcessor(
-        tts_manager, n_cards=5383, add_furigana=True, add_audio=True
-    )
+for (f,a) in [(True, True),(True, False),(False, True),(False, False)]:
+    with ApkgAsAnki(
+        "Dictionary of Japanese Grammar Blueprint", proceed_if_unzipped=True
+    ) as dojg_deck:
+        processor = FieldProcessor(
+            tts_manager, n_cards=5383, add_furigana=f, add_audio=a
+        )
 
-    """
-    # doesn't work
-    # whatever, we can include it by exporting
-    audio_dir = 'dojg_sentence_audio' 
-    for audio_file in os.listdir(audio_dir)[:50]:
-        path = os.path.join(audio_dir, audio_file)
-        maybe_renamed = dojg_deck.col.media.add_file(path)
-        assert maybe_renamed == audio_file
-    """
-  
-    dojg_deck.apply_to_notes(processor.furiganize_fields)
-    print(processor.counter)
+        target_name = "Dictionary of Japanese Grammar"
+        if f: target_name += " +F"
+        if a: target_name += " +A"
 
-    dojg_deck.commit_and_save(with_name="Dictionary of Japanese Grammar +F +A")
+        """
+        # doesn't work
+        # whatever, we can include it by exporting
+        audio_dir = 'dojg_sentence_audio' 
+        for audio_file in os.listdir(audio_dir)[:50]:
+            path = os.path.join(audio_dir, audio_file)
+            maybe_renamed = dojg_deck.col.media.add_file(path)
+            assert maybe_renamed == audio_file
+        """
+        thing = dojg_deck.col.decks.all_names_and_ids()
+        for i in range(len(thing)):
+            if 'Dictionary of Japanese Grammar' in thing[i].name:
+                dojg_deck.col.decks.rename(thing[i].id, target_name)
+            
+      
+        dojg_deck.apply_to_notes(processor.furiganize_fields)
+        print(processor.counter)
 
-
-with ApkgAsAnki(
-    "Dictionary of Japanese Grammar Blueprint", proceed_if_unzipped=True
-) as dojg_deck:
-    processor = FieldProcessor(
-        tts_manager, n_cards=5383, add_furigana=True, add_audio=False
-    )
-    dojg_deck.apply_to_notes(processor.furiganize_fields)
-    dojg_deck.commit_and_save(with_name="Dictionary of Japanese Grammar +F")
-
-
-with ApkgAsAnki(
-    "Dictionary of Japanese Grammar Blueprint", proceed_if_unzipped=True
-) as dojg_deck:
-    processor = FieldProcessor(
-        tts_manager, n_cards=5383, add_furigana=False, add_audio=True
-    )
-    dojg_deck.apply_to_notes(processor.furiganize_fields)
-    dojg_deck.commit_and_save(with_name="Dictionary of Japanese Grammar +A")
-
-
-with ApkgAsAnki(
-    "Dictionary of Japanese Grammar Blueprint", proceed_if_unzipped=True
-) as dojg_deck:
-    processor = FieldProcessor(
-        tts_manager, n_cards=5383, add_furigana=False, add_audio=False
-    )
-    dojg_deck.apply_to_notes(processor.furiganize_fields)
-    dojg_deck.commit_and_save(with_name="Dictionary of Japanese Grammar")
+        dojg_deck.commit_and_save(with_name=target_name)

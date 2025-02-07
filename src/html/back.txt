@@ -106,8 +106,6 @@
       }
 
       // generate random ordered nonrepeating indices - 'count' of them      
-			 var results = [];
-
 			 function generateUniqueSamples(x, y) {
 			     let samples = [];
   			   while (samples.length < x) {
@@ -118,7 +116,8 @@
  			    }
  			    return samples;
       }
-      var results = generateUniqueSamples(count, fields.length+count);
+      //var results = generateUniqueSamples(count, nodes.length-1);
+
 
        for (var j = 0; j < results.length; j++) {
            var element = results[j];

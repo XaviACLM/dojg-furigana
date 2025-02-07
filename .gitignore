@@ -1,6 +1,5 @@
 __pycache__/
 todo.txt
-dojg_sentence_audio/
-dojg_sentence_audio_hq.7z
+src/dojg_sentence_audio/*
+mediafire_material/
 src/tts2.py
-src/Dictionary of Japanese Grammar.apkg
