@@ -247,9 +247,9 @@ class FieldProcessor:
         # necessary for the morphological parser to be able to handle the text
 
         fields = note.fields
-        
+
         for original, substitute in substitutions.items():
-            for i,field in enumerate(fields):
+            for i, field in enumerate(fields):
                 fields[i] = field.replace(original, substitute)
 
         if "male" in fields[1] and "suffix" not in fields[1]:
@@ -287,7 +287,9 @@ print(jjsj)
 #hiragana gets parsed correctly (hell yeah)
 """
 
-with ApkgAsAnki("Dictionary of Japanese Grammar Blueprint", proceed_if_unzipped=True) as dojg_deck:
+with ApkgAsAnki(
+    "Dictionary of Japanese Grammar Blueprint", proceed_if_unzipped=True
+) as dojg_deck:
     tts_manager = VoicevoxManager()
     processor = FieldProcessor(
         tts_manager, n_cards=5383, add_furigana=True, add_audio=True

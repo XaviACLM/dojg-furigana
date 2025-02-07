@@ -14,6 +14,7 @@ import pandas as pd
 
 from anki.collection import Collection
 
+
 def zipdir(path, ziph):
     # ziph is zipfile handle
     for root, dirs, files in os.walk(path):
@@ -27,8 +28,9 @@ class ApkgUnzippingManager:
     """
     handles zipping/unzipping of apkg files and locating of important files within. other classes actually interface with these files
     """
+
     def __init__(self, name, proceed_if_unzipped=False):
-        self.name, _ = os.path.splitext(name) #ignore extension
+        self.name, _ = os.path.splitext(name)  # ignore extension
         self.proceed_if_unzipped = proceed_if_unzipped
 
     def __enter__(self):
@@ -105,6 +107,7 @@ class SQLPandasInterface:
     """
     just a workaround to be able to use SQAlchemy+pd instead of the anki specific db proxy
     """
+
     def __init__(self, apkg_manager: ApkgUnzippingManager):
         self.apkg_manager = apkg_manager
 
@@ -142,11 +145,12 @@ class SQLPandasInterface:
         if exc_type is not None:
             return False  # Propagate the exception
 
-        
+
 class AnkiColInterface:
     """
     opens an unzipped apkg as an actual anki Collection
     """
+
     def __init__(self, apkg_manager: ApkgUnzippingManager):
         self.apkg_manager = apkg_manager
 
@@ -155,21 +159,22 @@ class AnkiColInterface:
 
         return self
 
-    
     def notes(self):
-        yield from map(self.col.get_note, self.col.find_notes(''))
+        yield from map(self.col.get_note, self.col.find_notes(""))
 
     def cards(self):
-        yield from map(self.col.get_card, self.col.find_cards(''))
+        yield from map(self.col.get_card, self.col.find_cards(""))
 
     def apply_to_notes(self, fun):
         for note in self.notes():
-            if fun(note) is not None: raise Exception('function applied to notes must be NoneType')
+            if fun(note) is not None:
+                raise Exception("function applied to notes must be NoneType")
             note.flush()
 
     def apply_to_cards(self, fun):
         for card in self.cards():
-            if fun(card) is not None: raise Exception('function applied to notes must be NoneType')
+            if fun(card) is not None:
+                raise Exception("function applied to notes must be NoneType")
             card.flush()
 
     def add_media(self, media_files: list[str]):
@@ -212,7 +217,9 @@ class AnkiColInterface:
 def compose_with_apkg_unzipper(cls, name):
     class ComposedClass:
         def __init__(self, name, proceed_if_unzipped=False):
-            self.apkg_manager = ApkgUnzippingManager(name, proceed_if_unzipped=proceed_if_unzipped)
+            self.apkg_manager = ApkgUnzippingManager(
+                name, proceed_if_unzipped=proceed_if_unzipped
+            )
 
         def __enter__(self):
             self.apkg_manager.__enter__()
@@ -224,7 +231,8 @@ def compose_with_apkg_unzipper(cls, name):
             # is this right?
             self.interface.__exit__(exc_type, exc_value, traceback)
             self.apkg_manager.__exit__(exc_type, exc_value, traceback)
-            if exc_type is not None: return False
+            if exc_type is not None:
+                return False
 
     ComposedClass.__name__ = name
     return ComposedClass
@@ -234,20 +242,21 @@ ApkgAsPandas = compose_with_apkg_unzipper(SQLPandasInterface, "ApkgAsPandas")
 ApkgAsAnki = compose_with_apkg_unzipper(AnkiColInterface, "ApkgAsAnki")
 
 
-if __name__=="__main__":
-    #with ApkgUnzippingManager('Dictionary of Japanese Grammar', proceed_if_unzipped=True) as apkg_handler: 
+if __name__ == "__main__":
+    # with ApkgUnzippingManager('Dictionary of Japanese Grammar', proceed_if_unzipped=True) as apkg_handler:
     #    with AnkiColInterface(apkg_handler) as deck:
-    with ApkgAsAnki('Dictionary of Japanese Grammar', proceed_if_unzipped=True) as deck:
+    with ApkgAsAnki("Dictionary of Japanese Grammar", proceed_if_unzipped=True) as deck:
         if 1:
+
             def addrm_bals(note):
-                if note.fields[0].endswith('bals'):
+                if note.fields[0].endswith("bals"):
                     note.fields[0] = note.fields[0][:-4]
                 else:
-                    note.fields[0]+='bals'
+                    note.fields[0] += "bals"
+
             for note in list(deck.notes())[:5]:
                 print(note.fields[0])
             deck.apply_to_notes(addrm_bals)
             for note in list(deck.notes())[:5]:
                 print(note.fields[0])
             deck.commit_and_save(overwrite=True)
-        
