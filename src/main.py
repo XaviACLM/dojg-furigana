@@ -199,8 +199,9 @@ class FieldProcessor:
         sentence_readable_text = handle_brackets(sentence_text)
         sentence_readable_text = handle_nakaguro(sentence_readable_text)
 
-        sentence_id = deterministic_hash(sentence_readable_text)
-        sentence_audio_path = f"dojg_sentence_audio\\{sentence_id}.wav"
+        sentence_id = deterministic_hash(sentence_readable_text)[:32]
+        sentence_filename = f"dojg_audio.{sentence_id}.mp3"
+        sentence_audio_path = f"dojg_sentence_audio\\{sentence_filename}"
 
         # this fails sometimes, though the program keeps running
         # an issue w tts. not a problem, we just do a few extra passes
@@ -217,24 +218,24 @@ class FieldProcessor:
                 sentence_readable_text,
                 speed=0.8,
                 file_dir="dojg_sentence_audio",
-                file_name=sentence_id,
+                file_name=sentence_filename,
                 voice_idx=speaker,
             )
+            if self.n_cards is not None:
+                time_now = datetime.now()
+                avg_gen_time = (time_now - self.start_time) / self.counter_generated
+                cards_left = self.n_cards - self.counter
+                approx_time = avg_gen_time * cards_left
+                approx_ending_time = time_now + approx_time
+                print(
+                    f"{self.counter} / {self.n_cards} - ETA {approx_ending_time.strftime('%H:%M')}"
+                )
 
         audio_html = f"[sound:{sentence_audio_path}]"
-        if self.n_cards is not None and self.counter_generated > 0:
-            time_now = datetime.now()
-            avg_gen_time = (time_now - self.start_time) / self.counter_generated
-            cards_left = self.n_cards - self.counter
-            approx_time = avg_gen_time * cards_left
-            approx_ending_time = time_now + approx_time
-            print(
-                f"{self.counter} / {self.n_cards} - ETA {approx_ending_time.strftime('%H:%M')}"
-            )
 
         # add tag back + audio
         final_html = (
-            (audio_html + " " if self.add_audio else "")
+            ((audio_html + " ") if self.add_audio else "")
             + ("" if tag is None else f'<span class="green">({tag}).</span>  ')
             + furiganized_html
         )
@@ -247,6 +248,9 @@ class FieldProcessor:
         # necessary for the morphological parser to be able to handle the text
 
         fields = note.fields
+
+        # replace personal note
+        fields[0] = fields[0].replace('e-stem','エの形')
 
         for original, substitute in substitutions.items():
             for i, field in enumerate(fields):
@@ -287,16 +291,68 @@ print(jjsj)
 #hiragana gets parsed correctly (hell yeah)
 """
 
+"""
 with ApkgAsAnki(
     "Dictionary of Japanese Grammar Blueprint", proceed_if_unzipped=True
 ) as dojg_deck:
-    tts_manager = VoicevoxManager()
+
+    def inspect(note):
+        print(note.fields[0])
+        print("\n".join(note.fields[8:13]))
+        print("\n"*1)
+
+    dojg_deck.apply_to_notes(inspect)
+"""
+
+tts_manager = VoicevoxManager()
+with ApkgAsAnki(
+    "Dictionary of Japanese Grammar Blueprint", proceed_if_unzipped=True
+) as dojg_deck:
     processor = FieldProcessor(
         tts_manager, n_cards=5383, add_furigana=True, add_audio=True
     )
 
-    dojg_deck.notes["flds"] = dojg_deck.apply_to_notes(processor.furiganize_fields)
+    """
+    # doesn't work
+    # whatever, we can include it by exporting
+    audio_dir = 'dojg_sentence_audio' 
+    for audio_file in os.listdir(audio_dir)[:50]:
+        path = os.path.join(audio_dir, audio_file)
+        maybe_renamed = dojg_deck.col.media.add_file(path)
+        assert maybe_renamed == audio_file
+    """
+  
+    dojg_deck.apply_to_notes(processor.furiganize_fields)
     print(processor.counter)
 
-    # dojg_deck.add_media([os.path.join('dojg_sentence_audio',file) for file in os.listdir('dojg_sentence_audio')])
-    # dojg_deck.commit_and_save(with_name="Dictionary of Japanese Grammar")
+    dojg_deck.commit_and_save(with_name="Dictionary of Japanese Grammar +F +A")
+
+
+with ApkgAsAnki(
+    "Dictionary of Japanese Grammar Blueprint", proceed_if_unzipped=True
+) as dojg_deck:
+    processor = FieldProcessor(
+        tts_manager, n_cards=5383, add_furigana=True, add_audio=False
+    )
+    dojg_deck.apply_to_notes(processor.furiganize_fields)
+    dojg_deck.commit_and_save(with_name="Dictionary of Japanese Grammar +F")
+
+
+with ApkgAsAnki(
+    "Dictionary of Japanese Grammar Blueprint", proceed_if_unzipped=True
+) as dojg_deck:
+    processor = FieldProcessor(
+        tts_manager, n_cards=5383, add_furigana=False, add_audio=True
+    )
+    dojg_deck.apply_to_notes(processor.furiganize_fields)
+    dojg_deck.commit_and_save(with_name="Dictionary of Japanese Grammar +A")
+
+
+with ApkgAsAnki(
+    "Dictionary of Japanese Grammar Blueprint", proceed_if_unzipped=True
+) as dojg_deck:
+    processor = FieldProcessor(
+        tts_manager, n_cards=5383, add_furigana=False, add_audio=False
+    )
+    dojg_deck.apply_to_notes(processor.furiganize_fields)
+    dojg_deck.commit_and_save(with_name="Dictionary of Japanese Grammar")

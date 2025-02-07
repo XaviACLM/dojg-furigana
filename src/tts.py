@@ -51,7 +51,7 @@ VOICEPEAK_VOICES = [  # default speaking params for some extra character (very m
 """
 
 VOICEPEAK_DIR = os.path.join("C:", os.sep, "Program Files", "Voicepeak")
-VOICEPEAK_EXE = os.path.join(CRACKED_VOICEPEAK_DIR, "voicepeak.exe")
+VOICEPEAK_EXE = os.path.join(VOICEPEAK_DIR, "voicepeak.exe")
 
 
 class VoicevoxInterface(TimedResourceManager, metaclass=TransientSingleton):

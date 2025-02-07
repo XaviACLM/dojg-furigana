@@ -69,9 +69,9 @@ class ApkgUnzippingManager:
 
         return self
 
-    def oh_shit_wrong_db_path():
+    def _oh_shit_wrong_db_path(self):
         self.db_path = os.path.join(self.base_path, "collection.anki2")
-
+        
     def save(self, with_name: Optional[str] = None, overwrite: bool = False):
         self._saved = True
         pkg_name = with_name or self.name
@@ -90,6 +90,10 @@ class ApkgUnzippingManager:
                 compressed_file.write(pyzstd.compress(decompressed_file.read()))
         with zipfile.ZipFile(pkg_name, "w", zipfile.ZIP_DEFLATED) as zip_f:
             zipdir(self.name, zip_f)
+
+    # terrible code. i'm so tired of this.
+    def _remove_wal(self,pkg_name):
+        pass
 
     def __exit__(self, exc_type, exc_value, traceback):
         if not self._saved:
@@ -119,7 +123,7 @@ class SQLPandasInterface:
         except:
             # ugh
             self.engine.dispose()
-            self.apkg_manager.oh_shit_wrong_path()
+            self.apkg_manager._oh_shit_wrong_path()
             url = "sqlite:///" + self.db_path
             self.engine = sqlalchemy.apkg_handler.create_engine(url)
             self.notes = pd.read_sql(f"SELECT * FROM notes", con=self.engine)
@@ -202,6 +206,9 @@ class AnkiColInterface:
 
     def commit(self):
         self.col.save(trx=False)
+        # ugh
+        self.col.db.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+        self.col.db.execute("PRAGMA wal_checkpoint")
 
     def commit_and_save(self, with_name: Optional[str] = None, overwrite: bool = False):
         self.commit()
@@ -245,8 +252,9 @@ ApkgAsAnki = compose_with_apkg_unzipper(AnkiColInterface, "ApkgAsAnki")
 if __name__ == "__main__":
     # with ApkgUnzippingManager('Dictionary of Japanese Grammar', proceed_if_unzipped=True) as apkg_handler:
     #    with AnkiColInterface(apkg_handler) as deck:
-    with ApkgAsAnki("Dictionary of Japanese Grammar", proceed_if_unzipped=True) as deck:
-        if 1:
+    with ApkgAsAnki("Dictionary of Japanese Grammar Blueprint", proceed_if_unzipped=True) as deck:
+        breakpoint()
+        if 0:
 
             def addrm_bals(note):
                 if note.fields[0].endswith("bals"):
