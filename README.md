@@ -1,5 +1,11 @@
 The anki deck for the Dictionary of Japanese Grammar, but with furigana and audio. Of course this could not exist without the [original DoJG deck](https://dojgdeck.neocities.org/#anon) as well as the [DoJG](https://core6000.neocities.org/dojg/) itself.
 
+Downloads/installation instructions are below. The front/back of the cards looks like so:
+
+![front](https://raw.githubusercontent.com/XaviACLM/dojg-furigana/refs/heads/master/readme_images/anki_dojg_example_front.png)
+
+![front](https://raw.githubusercontent.com/XaviACLM/dojg-furigana/refs/heads/master/readme_images/anki_dojg_example_back.png)
+
 ## Installation
 
 ### Decks
